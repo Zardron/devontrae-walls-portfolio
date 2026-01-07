@@ -1,8 +1,19 @@
 import { useEffect, useState } from 'react'
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import AOS from 'aos'
 import 'aos/dist/aos.css'
 import './App.css'
+import logo from './assets/logo.png'
+import { 
+  SiNodedotjs, SiTypescript, SiReact, SiNextdotjs, SiSpring, SiVuedotjs, SiAngular,
+  SiCss3, SiMui, SiTailwindcss, SiSass, SiBootstrap,
+  SiMysql, SiGraphql, SiMongodb, SiFirebase, SiPostman,
+  SiDocker, SiKubernetes, SiApachekafka, SiAmazon, SiGooglecloud, SiTerraform, SiHelm,
+  SiJira, SiGitlab, SiBitbucket, SiGit,
+  SiWordpress, SiShopify, SiWoo, SiDrupal, SiMagento, SiHubspot,
+  SiIonic, SiTwilio, SiSwift
+} from 'react-icons/si'
+import { FaReact, FaJava } from 'react-icons/fa'
 
 interface Experience {
   company: string
@@ -17,10 +28,131 @@ interface Skill {
   items: string[]
 }
 
+interface Project {
+  title: string
+  description: string
+  features?: string[]
+  technologies: string[]
+}
+
+// Brand colors mapping for technologies
+const techColors: { [key: string]: string } = {
+  'NodeJS': '#339933',
+  'TypeScript': '#3178C6',
+  'React': '#61DAFB',
+  'NextJS': '#000000',
+  'Java': '#ED8B00',
+  'Spring Boot': '#6DB33F',
+  'Vue': '#4FC08D',
+  'Angular': '#DD0031',
+  'CSS3': '#1572B6',
+  'Material UI': '#007FFF',
+  'Tailwind CSS': '#06B6D4',
+  'shadcn/ui': '#61DAFB',
+  'Styled Components': '#DB7093',
+  'SASS': '#CC6699',
+  'Bootstrap': '#7952B3',
+  'MySQL': '#4479A1',
+  'GraphQL': '#E10098',
+  'MongoDB': '#47A248',
+  'Firebase': '#FFCA28',
+  'Postman': '#FF6C37',
+  'Docker': '#2496ED',
+  'Kubernetes': '#326CE5',
+  'Kafka': '#231F20',
+  'AWS': '#FF9900',
+  'Google Cloud Platform': '#4285F4',
+  'Terraform': '#7B42BC',
+  'Helm': '#0F1689',
+  'Jira': '#0052CC',
+  'GitLab CI/CD': '#FC6D26',
+  'Bitbucket CI/CD': '#0052CC',
+  'Git': '#F05032',
+  'WordPress': '#21759B',
+  'Shopify': '#96BF48',
+  'WooCommerce': '#96588A',
+  'Drupal': '#0678BE',
+  'Magento': '#EE672F',
+  'HubSpot CMS': '#FF7A59',
+  'Ionic': '#3880FF',
+  'Twilio': '#F22F46',
+  'Swift': '#FA7343',
+  'GStreamer': '#FF6B6B',
+  'Capacitor': '#119EFF',
+  'MediaSoup': '#FF6B6B',
+  'WebRTC': '#333333',
+  'HLS': '#FF6B6B',
+  'AWS S3': '#FF9900',
+  'AWS MediaConvert': '#FF9900',
+  'Lambda': '#FF9900',
+  'Close.io': '#FF6B6B'
+}
+
+// Icon mapping for technologies
+const getTechIcon = (techName: string): React.ReactElement => {
+  const iconMap: { [key: string]: React.ReactElement } = {
+    'NodeJS': <SiNodedotjs style={{ color: techColors['NodeJS'] }} />,
+    'TypeScript': <SiTypescript style={{ color: techColors['TypeScript'] }} />,
+    'React': <SiReact style={{ color: techColors['React'] }} />,
+    'NextJS': <SiNextdotjs style={{ color: techColors['NextJS'] }} />,
+    'Java': <FaJava style={{ color: techColors['Java'] }} />,
+    'Spring Boot': <SiSpring style={{ color: techColors['Spring Boot'] }} />,
+    'Vue': <SiVuedotjs style={{ color: techColors['Vue'] }} />,
+    'Angular': <SiAngular style={{ color: techColors['Angular'] }} />,
+    'CSS3': <SiCss3 style={{ color: techColors['CSS3'] }} />,
+    'Material UI': <SiMui style={{ color: techColors['Material UI'] }} />,
+    'Tailwind CSS': <SiTailwindcss style={{ color: techColors['Tailwind CSS'] }} />,
+    'shadcn/ui': <SiReact style={{ color: techColors['shadcn/ui'] }} />,
+    'Styled Components': <FaReact style={{ color: techColors['Styled Components'] }} />,
+    'SASS': <SiSass style={{ color: techColors['SASS'] }} />,
+    'Bootstrap': <SiBootstrap style={{ color: techColors['Bootstrap'] }} />,
+    'MySQL': <SiMysql style={{ color: techColors['MySQL'] }} />,
+    'GraphQL': <SiGraphql style={{ color: techColors['GraphQL'] }} />,
+    'MongoDB': <SiMongodb style={{ color: techColors['MongoDB'] }} />,
+    'Firebase': <SiFirebase style={{ color: techColors['Firebase'] }} />,
+    'Postman': <SiPostman style={{ color: techColors['Postman'] }} />,
+    'Docker': <SiDocker style={{ color: techColors['Docker'] }} />,
+    'Kubernetes': <SiKubernetes style={{ color: techColors['Kubernetes'] }} />,
+    'Kafka': <SiApachekafka style={{ color: techColors['Kafka'] }} />,
+    'AWS': <SiAmazon style={{ color: techColors['AWS'] }} />,
+    'Google Cloud Platform': <SiGooglecloud style={{ color: techColors['Google Cloud Platform'] }} />,
+    'Terraform': <SiTerraform style={{ color: techColors['Terraform'] }} />,
+    'Helm': <SiHelm style={{ color: techColors['Helm'] }} />,
+    'Jira': <SiJira style={{ color: techColors['Jira'] }} />,
+    'GitLab CI/CD': <SiGitlab style={{ color: techColors['GitLab CI/CD'] }} />,
+    'Bitbucket CI/CD': <SiBitbucket style={{ color: techColors['Bitbucket CI/CD'] }} />,
+    'Git': <SiGit style={{ color: techColors['Git'] }} />,
+    'WordPress': <SiWordpress style={{ color: techColors['WordPress'] }} />,
+    'Shopify': <SiShopify style={{ color: techColors['Shopify'] }} />,
+    'WooCommerce': <SiWoo style={{ color: techColors['WooCommerce'] }} />,
+    'Drupal': <SiDrupal style={{ color: techColors['Drupal'] }} />,
+    'Magento': <SiMagento style={{ color: techColors['Magento'] }} />,
+    'HubSpot CMS': <SiHubspot style={{ color: techColors['HubSpot CMS'] }} />,
+    'Ionic': <SiIonic style={{ color: techColors['Ionic'] }} />,
+    'Twilio': <SiTwilio style={{ color: techColors['Twilio'] }} />,
+    'Swift': <SiSwift style={{ color: techColors['Swift'] }} />,
+    'Capacitor': <SiIonic style={{ color: techColors['Capacitor'] }} />,
+    'AWS S3': <SiAmazon style={{ color: techColors['AWS S3'] }} />,
+    'AWS MediaConvert': <SiAmazon style={{ color: techColors['AWS MediaConvert'] }} />,
+    'Lambda': <SiAmazon style={{ color: techColors['Lambda'] }} />,
+    'GStreamer': <SiNodedotjs style={{ color: techColors['GStreamer'] }} />,
+    'MediaSoup': <SiNodedotjs style={{ color: techColors['MediaSoup'] }} />,
+    'WebRTC': <SiReact style={{ color: techColors['WebRTC'] }} />,
+    'HLS': <SiNodedotjs style={{ color: techColors['HLS'] }} />,
+    'Close.io': <SiNodedotjs style={{ color: techColors['Close.io'] }} />
+  }
+  
+  return iconMap[techName] || <SiReact style={{ color: techColors['React'] }} />
+}
+
 const skills: Skill[] = [
   {
     category: 'Languages & Frameworks',
-    items: ['NodeJS', 'TypeScript', 'React', 'Java', 'Spring Boot', 'Vue', 'Angular']
+    items: ['NodeJS', 'TypeScript', 'React', 'NextJS', 'Java', 'Spring Boot', 'Vue', 'Angular']
+  },
+  {
+    category: 'Styling & UI Libraries',
+    items: ['CSS3', 'Material UI', 'Tailwind CSS', 'shadcn/ui', 'Styled Components', 'SASS', 'Bootstrap']
   },
   {
     category: 'Databases & APIs',
@@ -33,12 +165,16 @@ const skills: Skill[] = [
   {
     category: 'Tools & CI/CD',
     items: ['Jira', 'GitLab CI/CD', 'Bitbucket CI/CD', 'Git']
+  },
+  {
+    category: 'CMS',
+    items: ['WordPress', 'Shopify', 'WooCommerce', 'Drupal', 'Magento', 'HubSpot CMS']
   }
 ]
 
 const experiences: Experience[] = [
   {
-    company: 'Icred, Inc.',
+    company: 'Icered, Inc.',
     position: 'Staff Engineer / Tech Lead',
     period: '2025 - Present',
     description: [
@@ -125,32 +261,116 @@ const experiences: Experience[] = [
     technologies: ['MERN Stack', 'Docker', 'ElectronJS', 'REST APIs', 'MongoDB']
   },
   {
-    company: 'TechStart Solutions',
-    position: 'Software Developer',
+    company: 'ANGL Marketing, Inc.',
+    position: 'Full Stack Engineer',
     period: '2015 - 2017',
     description: [
-      'Developed full-stack web applications using modern JavaScript frameworks, building responsive user interfaces and robust backend services.',
-      'Collaborated with product teams to translate business requirements into technical specifications and implementation plans.',
-      'Implemented database solutions using MySQL and MongoDB, designing schemas optimized for performance and scalability.',
-      'Participated in code reviews and technical discussions, contributing to architectural decisions and best practices.',
-      'Maintained legacy systems while migrating to modern technology stacks, ensuring zero downtime during transitions.',
-      'Created technical documentation and user guides, facilitating knowledge transfer and onboarding processes.'
+      'Led development and maintenance of over 1,500 individual WordPress websites for a marketing company specializing in lead generation for local garage door repair businesses.',
+      'Collaborated closely with in-house engineering team to architect scalable solutions for managing large-scale WordPress deployments across multiple client sites.',
+      'Built custom WordPress plugins to extend functionality and meet specific business requirements, ensuring seamless integration with existing themes and third-party tools.',
+      'Designed and developed new WordPress websites from concept to deployment, creating responsive, SEO-optimized sites that maximized lead generation and conversion rates.',
+      'Developed sophisticated PHP command-line tools and automation scripts to implement features, fixes, and updates in bulk across hundreds of websites simultaneously, reducing manual deployment time by 90%.',
+      'Integrated Google Sheets API within automated reporting tools to provide real-time, at-a-glance statistics and analytics dashboards for the marketing team, enabling data-driven decision making.',
+      'Optimized website performance and implemented caching strategies across the WordPress network, improving page load times and user experience.',
+      'Established best practices for WordPress development, including version control workflows, code review processes, and deployment pipelines.'
     ],
-    technologies: ['JavaScript', 'React', 'NodeJS', 'MySQL', 'MongoDB']
+    technologies: ['WordPress', 'PHP', 'JavaScript', 'Google Sheets API', 'MySQL', 'HTML', 'CSS', 'jQuery']
   },
   {
-    company: 'Digital Innovations Group',
-    position: 'Junior Web Developer',
-    period: '2013 - 2015',
+    company: '8 Circle Media',
+    position: 'PHP Developer - In-House Team Environment',
+    period: '2016',
     description: [
-      'Built responsive websites and web applications using HTML, CSS, and JavaScript, ensuring cross-browser compatibility and mobile optimization.',
-      'Assisted in the development of client-side and server-side applications, learning industry best practices and modern development workflows.',
-      'Collaborated with senior developers on large-scale projects, contributing to codebases and learning advanced programming concepts.',
-      'Participated in team meetings and technical training sessions, continuously improving technical skills and knowledge.',
-      'Maintained and updated existing websites, fixing bugs and implementing new features based on client requirements.',
-      'Gained foundational experience in software development lifecycle, version control, and collaborative development practices.'
+      'Designed and built websites for high profile companies at a digital media firm located in Southern California offering services in web design and development, Graphic Design, Branding, and SEO.',
+      'Wrote PHP code daily to complete miscellaneous tasks for customers, ensuring timely delivery of client requirements.',
+      'Designed and implemented graphics for web pages, creating visually compelling designs that aligned with client branding.',
+      'Built new features into existing websites using PHP, enhancing functionality and improving user experience.',
+      'Collaborated on a team of 4 - giving and receiving feedback to improve projects and meet deadlines, maintaining high quality standards.',
+      'Quickly learned and adapted to current Web Technologies required by customers, including Magento e-commerce platform.'
     ],
-    technologies: ['HTML', 'CSS', 'JavaScript', 'jQuery', 'PHP']
+    technologies: ['Magento', 'PHP', 'JavaScript', 'HTML', 'CSS3', 'Adobe Photoshop CS5/CS6']
+  },
+  {
+    company: 'All In Orbit',
+    position: 'PHP Developer - In-House Team Environment',
+    period: '2013',
+    description: [
+      'Designed and built websites for high profile companies at a digital media firm located in Southern California offering services in web design and development, music and audio, commercial video and SEO Optimization.',
+      'Wrote PHP code daily to complete miscellaneous tasks for customers, ensuring efficient and reliable web applications.',
+      'Designed and implemented graphics for web pages, creating engaging visual content for client websites.',
+      'Built new features into existing websites using PHP, expanding functionality and improving overall site performance.',
+      'Collaborated on a team of 3 - giving and receiving feedback to improve projects and meet deadlines, working closely with designers and other developers.',
+      'Quickly learned and adapted to current Web Technologies required by customers, maintaining flexibility in a fast-paced environment.'
+    ],
+    technologies: ['PHP', 'JavaScript', 'HTML', 'CSS3', 'Adobe Photoshop CS5/CS6', 'Mac OS X', 'Bandcamp']
+  },
+  {
+    company: 'EXGF CULTURE',
+    position: 'PHP Developer - In-House Team Environment',
+    period: '2011 - 2016',
+    description: [
+      'Oversaw management of web projects for a collective of creative people working together to establish smaller companies in areas of Music, Web and Graphic Design, and PR.',
+      'Designed and built websites for high profile companies, ensuring professional quality and modern design standards.',
+      'Wrote PHP code daily to complete miscellaneous tasks for customers, maintaining and enhancing existing web applications.',
+      'Designed and implemented graphics for web pages using Adobe Photoshop, creating visually appealing and user-friendly interfaces.',
+      'Built new features into existing websites using PHP, Javascript, and many other technologies, improving functionality and user experience.',
+      'Collaborated on a team of 15 - giving and receiving feedback to improve projects and meet deadlines, fostering a productive team environment.',
+      'Quickly learned and adapted to current Web Technologies required by customers, staying current with industry trends and best practices.'
+    ],
+    technologies: ['PHP', 'JavaScript', 'HTML', 'CSS3', 'Adobe Photoshop CS5/CS6', 'Mac OS X', 'Bandcamp']
+  }
+]
+
+const projects: Project[] = [
+  {
+    title: 'Marketing Service',
+    description: 'A NodeJS App that serves as a webhook endpoint for Automation Workflows and CRMs. This project was used as the destination for form submissions from frontend landing pages.',
+    features: [
+      'Organizes and cleans form submissions from landing pages',
+      'Sends data to multiple registered CRMs per client (Hubspot, Jobber, Close.io, etc.)',
+      'Triggers Twilio workflows to send SMS to leads upon form submission',
+      'Enrolls leads into AI agent chatbot conversations automatically'
+    ],
+    technologies: ['NodeJS', 'Twilio', 'HubSpot CMS', 'Close.io']
+  },
+  {
+    title: 'Streaming Service',
+    description: 'A NodeJS App for Live Streaming from one video source to Live HLS video streams. The service utilizes a CDN to distribute streams.',
+    features: [
+      'Uses GStreamer to download and transcode video streams from source m3u8 playlists',
+      'Creates multiple quality renditions: 4K, 1080p, 720p, 480p, and 320p',
+      'Supports GPU hardware encoding for optimal performance',
+      'Generates perfectly segmented MPEG-TS files at any time frame interval'
+    ],
+    technologies: ['NodeJS', 'GStreamer', 'HLS', 'AWS']
+  },
+  {
+    title: 'Social Media Ionic App',
+    description: 'A Hybrid app built on top of the Ionic framework and ReactJS library. Uses Capacitor to bridge JavaScript with native Swift (iOS) and Java (Android) code, while remaining compatible with web browsers.',
+    features: [
+      'E2E Messaging with Group Chat and Direct Messaging support',
+      'Social Posts with reactions, comments, upvoting, sharing, and notifications',
+      'Account Settings for privacy, Dark Mode, and notification preferences',
+      'Push Notifications and Alerts center',
+      'Native camera support via custom Swift/Java implementations exposed through Capacitor',
+      'Multi-account switching support',
+      'HLS VOD Streaming with AWS S3, MediaConvert, and Lambda for video processing',
+      'Video Conferencing using MediaSoup with WebRTC protocol'
+    ],
+    technologies: ['Ionic', 'React', 'TypeScript', 'Capacitor', 'Swift', 'Java', 'AWS S3', 'AWS MediaConvert', 'Lambda', 'MediaSoup', 'WebRTC', 'HLS']
+  },
+  {
+    title: 'WordPress Bulk Management System',
+    description: 'A comprehensive WordPress management system for a marketing company specializing in lead generation for local garage door repair businesses. Built and maintained over 1,500 individual WordPress websites.',
+    features: [
+      'Built and maintained over 1,500 individual WordPress websites',
+      'Developed custom WordPress plugins to extend functionality and meet business requirements',
+      'Designed and built new WordPress websites from concept to deployment',
+      'Created PHP command-line tools to implement features and fixes in bulk across hundreds of websites simultaneously',
+      'Integrated Google Sheets API within automated reporting tools for real-time statistics and analytics dashboards',
+      'Collaborated with in-house engineering team to architect scalable solutions for large-scale WordPress deployments'
+    ],
+    technologies: ['WordPress', 'PHP', 'JavaScript', 'Google Sheets API', 'MySQL', 'HTML', 'CSS', 'jQuery']
   }
 ]
 
@@ -183,16 +403,26 @@ const itemVariants = {
     y: 0,
     transition: {
       duration: 0.5,
-      ease: "easeOut"
+      ease: [0.6, -0.05, 0.01, 0.99] as const
     }
   }
 }
 
 function App() {
   const [scrolled, setScrolled] = useState(false)
+  const [openAccordion, setOpenAccordion] = useState<number | null>(0) // First item open by default
+  const [openProjectAccordion, setOpenProjectAccordion] = useState<number | null>(0) // First project open by default
   const { scrollY } = useScroll()
   const opacity = useTransform(scrollY, [0, 300], [1, 0])
   const scale = useTransform(scrollY, [0, 300], [1, 0.95])
+
+  const toggleAccordion = (index: number) => {
+    setOpenAccordion(openAccordion === index ? null : index)
+  }
+
+  const toggleProjectAccordion = (index: number) => {
+    setOpenProjectAccordion(openProjectAccordion === index ? null : index)
+  }
 
   useEffect(() => {
     AOS.init({
@@ -212,11 +442,10 @@ function App() {
 
   return (
     <div className="portfolio">
-      {/* Animated Background Elements */}
+      {/* Animated Background */}
       <div className="animated-bg">
         <div className="gradient-orb orb-1"></div>
         <div className="gradient-orb orb-2"></div>
-        <div className="gradient-orb orb-3"></div>
       </div>
 
       {/* Navigation */}
@@ -227,15 +456,16 @@ function App() {
         transition={{ duration: 0.6, ease: "easeOut" }}
       >
         <div className="nav-container">
-          <motion.div 
+          <motion.a 
+            href="#about"
             className="nav-logo"
-            whileHover={{ scale: 1.1, rotate: 5 }}
+            whileHover={{ scale: 1.05 }}
             transition={{ type: "spring", stiffness: 400, damping: 10 }}
           >
-            DW
-          </motion.div>
+            <img src={logo} alt="Devontrae Walls Logo" className="logo-img" />
+          </motion.a>
           <div className="nav-links">
-            {['About', 'Experience', 'Skills', 'Contact'].map((link, index) => (
+            {['About', 'Skills', 'Projects', 'Experience', 'Contact'].map((link, index) => (
               <motion.a
                 key={link}
                 href={`#${link.toLowerCase()}`}
@@ -262,67 +492,52 @@ function App() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
+            <motion.span 
+              className="greeting"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              Hi, my name is
+            </motion.span>
+            
             <motion.h1 
               className="hero-name"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
             >
-              <motion.span 
-                className="greeting"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6, delay: 0.4 }}
-              >
-                Hi, I'm
-              </motion.span>
-              <motion.span 
-                className="name"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.6 }}
-              >
-                Devontrae Walls
-              </motion.span>
+              Devontrae Walls.
             </motion.h1>
             
-            <motion.p 
+            <motion.h2 
               className="hero-title"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+            >
+              I build things for the web.
+            </motion.h2>
+            
+            <motion.div 
+              className="hero-description-wrapper"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.8 }}
             >
-              Full-Stack Web Application Developer
-            </motion.p>
-            
-            <motion.p 
-              className="hero-description"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 1 }}
-            >
-              Specializing in <strong>Java Spring Boot</strong>, <strong>TypeScript</strong>, <strong>React</strong> and <strong>Infrastructure</strong>.
-              With over 12 years of experience building scalable applications and leading engineering teams.
-            </motion.p>
-            
-            <motion.div 
-              className="hero-location"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.6, delay: 1.2 }}
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                <circle cx="12" cy="10" r="3"></circle>
-              </svg>
-              <span>Memphis, TN</span>
+              <p className="hero-description">
+                I'm a <strong>Full-Stack Web Application Developer</strong> specializing in building exceptional digital experiences.
+              </p>
+              <p className="hero-description">
+                Currently focused on <strong>Java Spring Boot</strong>, <strong>TypeScript</strong>, <strong>React</strong>, and <strong>Infrastructure</strong> with over <strong>14 years</strong> of experience.
+              </p>
             </motion.div>
             
             <motion.div 
               className="hero-buttons"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 1.4 }}
+              transition={{ duration: 0.8, delay: 1 }}
             >
               <motion.a 
                 href="#contact" 
@@ -332,44 +547,8 @@ function App() {
               >
                 Get In Touch
               </motion.a>
-              <motion.a 
-                href="#experience" 
-                className="btn btn-secondary"
-                whileHover={{ scale: 1.05, y: -2 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                View Experience
-              </motion.a>
             </motion.div>
           </motion.div>
-
-          {/* Floating Tech Icons */}
-          <div className="floating-icons">
-            {['⚛️', '☕', '🐳', '⚡', '🚀'].map((icon, index) => (
-              <motion.div
-                key={index}
-                className="floating-icon"
-                initial={{ opacity: 0, scale: 0 }}
-                animate={{ 
-                  opacity: [0, 1, 0],
-                  y: [0, -30, 0],
-                  scale: [0, 1, 0]
-                }}
-                transition={{
-                  duration: 4,
-                  repeat: Infinity,
-                  delay: index * 0.8,
-                  ease: "easeInOut"
-                }}
-                style={{
-                  left: `${20 + index * 15}%`,
-                  top: `${30 + index * 10}%`
-                }}
-              >
-                {icon}
-              </motion.div>
-            ))}
-          </div>
         </div>
       </section>
 
@@ -385,7 +564,7 @@ function App() {
             transition={{ duration: 0.6 }}
           >
             <span className="title-number">01.</span>
-            Technical Skills
+            Skills & Technologies
           </motion.h2>
           <motion.div 
             className="skills-grid"
@@ -402,8 +581,8 @@ function App() {
                 data-aos="fade-up"
                 data-aos-delay={index * 100}
                 whileHover={{ 
-                  scale: 1.05, 
-                  y: -10,
+                  scale: 1.02, 
+                  y: -5,
                   transition: { duration: 0.3 }
                 }}
               >
@@ -413,20 +592,119 @@ function App() {
                     <motion.span 
                       key={itemIndex} 
                       className="skill-tag"
-                      whileHover={{ 
-                        scale: 1.1,
-                        rotate: [0, -5, 5, -5, 0],
-                        transition: { duration: 0.5 }
-                      }}
-                      initial={{ opacity: 0, scale: 0 }}
+                      whileHover={{ scale: 1.05 }}
+                      initial={{ opacity: 0, scale: 0.8 }}
                       whileInView={{ opacity: 1, scale: 1 }}
                       viewport={{ once: true }}
                       transition={{ delay: itemIndex * 0.05 }}
                     >
+                      <span className="skill-icon">{getTechIcon(item)}</span>
                       {item}
                     </motion.span>
                   ))}
                 </div>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Projects Section */}
+      <section id="projects" className="section projects-section">
+        <div className="container">
+          <motion.h2 
+            className="section-title"
+            data-aos="fade-up"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <span className="title-number">02.</span>
+            Featured Projects
+          </motion.h2>
+          <motion.div 
+            className="projects-list"
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+          >
+            {projects.map((project, index) => (
+              <motion.div 
+                key={index} 
+                className={`project-card ${openProjectAccordion === index ? 'active' : ''}`}
+                variants={itemVariants}
+                data-aos="fade-up"
+                data-aos-delay={index * 100}
+              >
+                <motion.div 
+                  className="project-header"
+                  onClick={() => toggleProjectAccordion(index)}
+                  whileHover={{ opacity: 0.9 }}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <div>
+                    <h3 className="project-title">{project.title}</h3>
+                    <p className="project-description">{project.description}</p>
+                  </div>
+                  <motion.svg
+                    className="accordion-icon"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 20 20"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    animate={{ rotate: openProjectAccordion === index ? 180 : 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <path d="M5 7.5L10 12.5L15 7.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  </motion.svg>
+                </motion.div>
+                <AnimatePresence>
+                  {openProjectAccordion === index && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3, ease: 'easeInOut' }}
+                      style={{ overflow: 'hidden' }}
+                    >
+                      <div className="project-content">
+                        {project.features && project.features.length > 0 && (
+                          <ul className="project-features">
+                            {project.features.map((feature, featureIndex) => (
+                              <motion.li 
+                                key={featureIndex}
+                                initial={{ opacity: 0, x: -20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: featureIndex * 0.05 }}
+                              >
+                                {feature}
+                              </motion.li>
+                            ))}
+                          </ul>
+                        )}
+                        <div className="project-technologies">
+                          {project.technologies.map((tech, techIndex) => (
+                            <motion.span 
+                              key={techIndex} 
+                              className="project-tech-tag"
+                              whileHover={{ scale: 1.05 }}
+                              initial={{ opacity: 0, scale: 0.8 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              transition={{ delay: techIndex * 0.03 }}
+                            >
+                              <span className="tech-icon">{getTechIcon(tech)}</span>
+                              {tech}
+                            </motion.span>
+                          ))}
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </motion.div>
             ))}
           </motion.div>
@@ -444,8 +722,8 @@ function App() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <span className="title-number">02.</span>
-            Professional Experience
+            <span className="title-number">03.</span>
+            Where I've Worked
           </motion.h2>
           <motion.div 
             className="experiences"
@@ -457,70 +735,85 @@ function App() {
             {experiences.map((exp, index) => (
               <motion.div 
                 key={index} 
-                className="experience-card"
+                className={`experience-card ${openAccordion === index ? 'active' : ''}`}
                 variants={itemVariants}
-                data-aos="fade-right"
+                data-aos="fade-up"
                 data-aos-delay={index * 100}
-                whileHover={{ 
-                  x: 10,
-                  transition: { duration: 0.3 }
-                }}
               >
-                <div className="experience-header">
+                <motion.div 
+                  className="experience-header"
+                  onClick={() => toggleAccordion(index)}
+                  whileHover={{ opacity: 0.9 }}
+                  style={{ cursor: 'pointer' }}
+                >
                   <div>
                     <h3 className="company-name">{exp.company}</h3>
                     <p className="position">{exp.position}</p>
                   </div>
-                  <motion.span 
-                    className="period"
-                    whileHover={{ scale: 1.1 }}
-                  >
-                    {exp.period}
-                  </motion.span>
-                </div>
-                <ul className="experience-description">
-                  {exp.description.map((desc, descIndex) => (
-                    <motion.li 
-                      key={descIndex}
-                      initial={{ opacity: 0, x: -20 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: descIndex * 0.1 }}
+                  <div className="experience-header-right">
+                    <span className="period">{exp.period}</span>
+                    <motion.svg
+                      className="accordion-icon"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 20 20"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      animate={{ rotate: openAccordion === index ? 180 : 0 }}
+                      transition={{ duration: 0.3 }}
                     >
-                      {desc}
-                    </motion.li>
-                  ))}
-                </ul>
-                {exp.technologies && (
-                  <motion.div 
-                    className="experience-technologies"
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.5 }}
-                  >
-                    {exp.technologies.map((tech, techIndex) => (
-                      <motion.span 
-                        key={techIndex} 
-                        className="tech-tag"
-                        whileHover={{ 
-                          scale: 1.15,
-                          y: -3
-                        }}
-                        initial={{ opacity: 0, scale: 0 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        viewport={{ once: true }}
-                        transition={{ 
-                          delay: techIndex * 0.05,
-                          type: "spring",
-                          stiffness: 200
-                        }}
-                      >
-                        {tech}
-                      </motion.span>
-                    ))}
-                  </motion.div>
-                )}
+                      <path d="M5 7.5L10 12.5L15 7.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    </motion.svg>
+                  </div>
+                </motion.div>
+                <AnimatePresence>
+                  {openAccordion === index && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3, ease: 'easeInOut' }}
+                      style={{ overflow: 'hidden' }}
+                    >
+                      <div className="experience-content">
+                        <ul className="experience-description">
+                          {exp.description.map((desc, descIndex) => (
+                            <motion.li 
+                              key={descIndex}
+                              initial={{ opacity: 0, x: -20 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{ delay: descIndex * 0.05 }}
+                            >
+                              {desc}
+                            </motion.li>
+                          ))}
+                        </ul>
+                        {exp.technologies && (
+                          <motion.div 
+                            className="experience-technologies"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 0.2 }}
+                          >
+                            {exp.technologies.map((tech, techIndex) => (
+                              <motion.span 
+                                key={techIndex} 
+                                className="tech-tag"
+                                whileHover={{ scale: 1.1 }}
+                                initial={{ opacity: 0, scale: 0.8 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                transition={{ delay: techIndex * 0.03 }}
+                              >
+                                {tech}
+                              </motion.span>
+                            ))}
+                          </motion.div>
+                        )}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </motion.div>
             ))}
           </motion.div>
@@ -538,7 +831,7 @@ function App() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <span className="title-number">03.</span>
+            <span className="title-number">04.</span>
             Volunteer Experience
           </motion.h2>
           <motion.div 
@@ -547,10 +840,7 @@ function App() {
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            whileHover={{ 
-              x: 10,
-              transition: { duration: 0.3 }
-            }}
+            whileHover={{ y: -5 }}
           >
             <div className="experience-header">
               <div>
@@ -587,7 +877,7 @@ function App() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <span className="title-number">04.</span>
+            <span className="title-number">05.</span>
             Get In Touch
           </motion.h2>
           <motion.div 
@@ -605,52 +895,36 @@ function App() {
               <motion.a 
                 href="tel:+12132949698" 
                 className="contact-item"
-                whileHover={{ 
-                  scale: 1.05,
-                  y: -5,
-                  boxShadow: "0 10px 30px rgba(100, 255, 218, 0.3)"
-                }}
-                whileTap={{ scale: 0.95 }}
+                whileHover={{ scale: 1.02, y: -3 }}
+                whileTap={{ scale: 0.98 }}
               >
-                <motion.svg 
-                  width="24" 
-                  height="24" 
-                  viewBox="0 0 24 24" 
-                  fill="none" 
-                  stroke="currentColor" 
-                  strokeWidth="2"
-                  animate={{ rotate: [0, 10, -10, 0] }}
-                  transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
-                >
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
-                </motion.svg>
+                </svg>
                 <span>(213) 294-9698</span>
               </motion.a>
               <motion.a 
                 href="mailto:devontrae@gmail.com" 
                 className="contact-item"
-                whileHover={{ 
-                  scale: 1.05,
-                  y: -5,
-                  boxShadow: "0 10px 30px rgba(100, 255, 218, 0.3)"
-                }}
-                whileTap={{ scale: 0.95 }}
+                whileHover={{ scale: 1.02, y: -3 }}
+                whileTap={{ scale: 0.98 }}
               >
-                <motion.svg 
-                  width="24" 
-                  height="24" 
-                  viewBox="0 0 24 24" 
-                  fill="none" 
-                  stroke="currentColor" 
-                  strokeWidth="2"
-                  animate={{ y: [0, -5, 0] }}
-                  transition={{ duration: 2, repeat: Infinity, repeatDelay: 2 }}
-                >
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
                   <polyline points="22,6 12,13 2,6"></polyline>
-                </motion.svg>
+                </svg>
                 <span>devontrae@gmail.com</span>
               </motion.a>
+              <motion.div 
+                className="contact-item contact-location"
+                whileHover={{ scale: 1.02, y: -3 }}
+              >
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+                <span>Memphis, TN</span>
+              </motion.div>
             </div>
           </motion.div>
         </div>
