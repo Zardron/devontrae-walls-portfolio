@@ -467,6 +467,7 @@ function App() {
       <div className="animated-bg">
         <div className="gradient-orb orb-1"></div>
         <div className="gradient-orb orb-2"></div>
+        <div className="gradient-orb orb-3"></div>
       </div>
 
       {/* Navigation */}
@@ -547,10 +548,10 @@ function App() {
               transition={{ duration: 0.8, delay: 0.8 }}
             >
               <p className="hero-description">
-                I'm a <strong>Full-Stack Web Application Developer</strong> specializing in building exceptional digital experiences.
+                I'm a <strong>Senior Full-Stack Developer</strong> specializing in building exceptional digital experiences.
               </p>
               <p className="hero-description">
-                Currently focused on <strong>Java Spring Boot</strong>, <strong>TypeScript</strong>, <strong>React</strong>, and <strong>Infrastructure</strong> with over <strong>14 years</strong> of experience.
+                Currently focused on <strong>Wordpress</strong>, <strong>JavaScript</strong>, <strong>TypeScript</strong>, <strong>React</strong>, <strong>NextJs</strong>, <strong>NodeJs</strong>, and <strong>Infrastructure</strong> with over <strong>14 years</strong> of experience.
               </p>
             </motion.div>
             
