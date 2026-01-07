@@ -145,6 +145,25 @@ const getTechIcon = (techName: string): React.ReactElement => {
   return iconMap[techName] || <SiReact style={{ color: techColors['React'] }} />
 }
 
+// Function to highlight React/reactjs in text
+const highlightReact = (text: string): React.ReactNode => {
+  const reactPattern = /\b(React|reactjs|ReactJS|React\.js)\b/gi
+  const parts = text.split(reactPattern)
+  
+  return parts.map((part, index) => {
+    // Check if this part matches the React pattern (case-insensitive)
+    const isReact = /^(React|reactjs|ReactJS|React\.js)$/i.test(part)
+    if (isReact) {
+      return (
+        <span key={index} style={{ color: techColors['React'], fontWeight: 600 }}>
+          {part}
+        </span>
+      )
+    }
+    return <span key={index}>{part}</span>
+  })
+}
+
 const skills: Skill[] = [
   {
     category: 'Languages & Frameworks',
@@ -180,13 +199,14 @@ const experiences: Experience[] = [
     description: [
       'Lead a high-performing engineering team at an innovative AI startup, driving technical strategy and architectural decisions for scalable AI-powered applications.',
       'Architect and maintain robust backend APIs using NodeJS, GraphQL, and MongoDB, ensuring high performance and reliability for production systems.',
+      'Develop and maintain frontend applications using ReactJS, building responsive and interactive user interfaces for AI-powered features.',
       'Implement comprehensive API documentation standards using Postman, enabling seamless integration for frontend teams and external partners.',
       'Manage and distribute development tasks across cross-functional teams using Jira, optimizing sprint planning and delivery timelines.',
       'Design and implement DevOps infrastructure solutions using Kubernetes and Helm, reducing deployment time by 40% and improving system reliability.',
       'Establish and enforce coding standards, including comprehensive unit testing, code coverage requirements, and automated linting processes.',
       'Mentor junior and mid-level engineers, conducting code reviews and technical training sessions to elevate team capabilities.'
     ],
-    technologies: ['NodeJS', 'GraphQL', 'MongoDB', 'Postman', 'Jira', 'Kubernetes', 'Helm', 'CI/CD']
+    technologies: ['React', 'NodeJS', 'GraphQL', 'MongoDB', 'Postman', 'Jira', 'Kubernetes', 'Helm', 'CI/CD']
   },
   {
     company: 'Achieve, Inc.',
@@ -335,18 +355,19 @@ const projects: Project[] = [
   },
   {
     title: 'Streaming Service',
-    description: 'A NodeJS App for Live Streaming from one video source to Live HLS video streams. The service utilizes a CDN to distribute streams.',
+    description: 'A full-stack application with ReactJS frontend and NodeJS backend for Live Streaming from one video source to Live HLS video streams. The service utilizes a CDN to distribute streams.',
     features: [
+      'Frontend built with ReactJS providing an intuitive interface for managing and viewing live streams',
       'Uses GStreamer to download and transcode video streams from source m3u8 playlists',
       'Creates multiple quality renditions: 4K, 1080p, 720p, 480p, and 320p',
       'Supports GPU hardware encoding for optimal performance',
       'Generates perfectly segmented MPEG-TS files at any time frame interval'
     ],
-    technologies: ['NodeJS', 'GStreamer', 'HLS', 'AWS']
+    technologies: ['React', 'NodeJS', 'GStreamer', 'HLS', 'AWS']
   },
   {
     title: 'Social Media Ionic App',
-    description: 'A Hybrid app built on top of the Ionic framework and ReactJS library. Uses Capacitor to bridge JavaScript with native Swift (iOS) and Java (Android) code, while remaining compatible with web browsers.',
+    description: 'A Hybrid app with ReactJS frontend built on top of the Ionic framework. Uses Capacitor to bridge JavaScript with native Swift (iOS) and Java (Android) code, while remaining compatible with web browsers.',
     features: [
       'E2E Messaging with Group Chat and Direct Messaging support',
       'Social Posts with reactions, comments, upvoting, sharing, and notifications',
@@ -785,7 +806,7 @@ function App() {
                               animate={{ opacity: 1, x: 0 }}
                               transition={{ delay: descIndex * 0.05 }}
                             >
-                              {desc}
+                              {highlightReact(desc)}
                             </motion.li>
                           ))}
                         </ul>
