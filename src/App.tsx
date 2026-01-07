@@ -7,7 +7,7 @@ import logo from './assets/logo.png'
 import { 
   SiNodedotjs, SiTypescript, SiReact, SiNextdotjs, SiSpring, SiVuedotjs, SiAngular,
   SiCss3, SiMui, SiTailwindcss, SiSass, SiBootstrap,
-  SiMysql, SiGraphql, SiMongodb, SiFirebase, SiPostman,
+  SiMysql, SiGraphql, SiMongodb, SiFirebase, SiPostman, SiSupabase,
   SiDocker, SiKubernetes, SiApachekafka, SiAmazon, SiGooglecloud, SiTerraform, SiHelm,
   SiJira, SiGitlab, SiBitbucket, SiGit,
   SiWordpress, SiShopify, SiWoo, SiDrupal, SiMagento, SiHubspot,
@@ -57,6 +57,7 @@ const techColors: { [key: string]: string } = {
   'MongoDB': '#47A248',
   'Firebase': '#FFCA28',
   'Postman': '#FF6C37',
+  'Supabase': '#3ECF8E',
   'Docker': '#2496ED',
   'Kubernetes': '#326CE5',
   'Kafka': '#231F20',
@@ -111,6 +112,7 @@ const getTechIcon = (techName: string): React.ReactElement => {
     'MongoDB': <SiMongodb style={{ color: techColors['MongoDB'] }} />,
     'Firebase': <SiFirebase style={{ color: techColors['Firebase'] }} />,
     'Postman': <SiPostman style={{ color: techColors['Postman'] }} />,
+    'Supabase': <SiSupabase style={{ color: techColors['Supabase'] }} />,
     'Docker': <SiDocker style={{ color: techColors['Docker'] }} />,
     'Kubernetes': <SiKubernetes style={{ color: techColors['Kubernetes'] }} />,
     'Kafka': <SiApachekafka style={{ color: techColors['Kafka'] }} />,
@@ -175,7 +177,7 @@ const skills: Skill[] = [
   },
   {
     category: 'Databases & APIs',
-    items: ['MySQL', 'GraphQL', 'MongoDB', 'Firebase', 'Postman']
+    items: ['MySQL', 'GraphQL', 'MongoDB', 'Firebase', 'Postman', 'Supabase']
   },
   {
     category: 'DevOps & Infrastructure',
@@ -431,6 +433,7 @@ const itemVariants = {
 
 function App() {
   const [scrolled, setScrolled] = useState(false)
+  const [showScrollTop, setShowScrollTop] = useState(false)
   const [openAccordion, setOpenAccordion] = useState<number | null>(0) // First item open by default
   const [openProjectAccordion, setOpenProjectAccordion] = useState<number | null>(0) // First project open by default
   const { scrollY } = useScroll()
@@ -455,6 +458,7 @@ function App() {
 
     const handleScroll = () => {
       setScrolled(window.scrollY > 50)
+      setShowScrollTop(window.scrollY > 100)
     }
 
     window.addEventListener('scroll', handleScroll)
@@ -964,6 +968,27 @@ function App() {
           <p>&copy; {new Date().getFullYear()} Devontrae Walls. Built with React & TypeScript.</p>
         </div>
       </motion.footer>
+
+      {/* Scroll to Top Button */}
+      <AnimatePresence>
+        {showScrollTop && (
+          <motion.button
+            className="scroll-to-top"
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            initial={{ opacity: 0, scale: 0, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0, y: 20 }}
+            whileHover={{ scale: 1.1, y: -5 }}
+            whileTap={{ scale: 0.95 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+            aria-label="Scroll to top"
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M18 15l-6-6-6 6" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </motion.button>
+        )}
+      </AnimatePresence>
       </div>
   )
 }
