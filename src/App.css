@@ -981,6 +981,40 @@ body {
   padding-top: 1.5rem;
 }
 
+.project-images {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(100, 255, 218, 0.2);
+}
+
+.project-image {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  border: 2px solid rgba(100, 255, 218, 0.2);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  object-fit: cover;
+  background: rgba(17, 34, 64, 0.5);
+}
+
+.project-image:hover {
+  border-color: rgba(100, 255, 218, 0.5);
+  box-shadow: 0 8px 30px rgba(100, 255, 218, 0.2);
+  transform: translateY(-4px);
+}
+
+@media (max-width: 768px) {
+  .project-images {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+}
+
 .project-features {
   list-style: none;
   padding: 0;
