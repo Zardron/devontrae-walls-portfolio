@@ -90,6 +90,23 @@ export const Projects = ({ openProjectAccordion, toggleProjectAccordion }: Proje
                     style={{ overflow: 'hidden' }}
                   >
                     <div className="project-content">
+                      {project.images && project.images.length > 0 && (
+                        <div className="project-images">
+                          {project.images.map((image, imageIndex) => (
+                            <motion.img
+                              key={imageIndex}
+                              src={image}
+                              alt={`${project.title} screenshot ${imageIndex + 1}`}
+                              className="project-image"
+                              initial={{ opacity: 0, scale: 0.9 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              transition={{ delay: imageIndex * 0.1 }}
+                              whileHover={{ scale: 1.02 }}
+                              loading="lazy"
+                            />
+                          ))}
+                        </div>
+                      )}
                       {project.features && project.features.length > 0 && (
                         <ul className="project-features">
                           {project.features.map((feature, featureIndex) => (
