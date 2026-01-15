@@ -16,5 +16,6 @@ export interface Project {
   description: string
   features?: string[]
   technologies: string[]
+  images?: string[]
 }
 
